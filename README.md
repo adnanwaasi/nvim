@@ -40,7 +40,8 @@ On first launch lazy.nvim installs every plugin at the versions pinned in `lazy-
 ## Layout
 
 ```
-init.lua                  bootstraps lazy.nvim
+init.lua                  entry point
+lua/config/lazy.lua       bootstraps and sets up lazy.nvim
 lua/config/options.lua    editor options
 lua/config/keymaps.lua    extra keymaps
 lua/config/autocmds.lua   extra autocommands
