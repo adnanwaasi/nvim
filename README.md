@@ -10,7 +10,7 @@ My Neovim config, built on [LazyVim](https://github.com/LazyVim/LazyVim) with a 
 - [`tree-sitter` CLI](https://github.com/tree-sitter/tree-sitter) (nvim-treesitter `main` builds parsers with it)
 - A [Nerd Font](https://www.nerdfonts.com/) set in your terminal
 - Runtimes Mason needs to install language servers and formatters:
-  - **Node.js / npm** for TypeScript, ESLint, Pyright, Prettier, Tailwind, HTML/CSS/JSON/YAML, Bash LS and Copilot
+  - **Node.js / npm** for TypeScript, ESLint, Pyright, Prettier, Tailwind, HTML/CSS/JSON/YAML and Bash LS
   - **Python 3** (with `venv`) for Black and Ruff
   - **Go** for gopls, goimports and gofumpt
 
@@ -32,7 +32,7 @@ git clone https://github.com/adnanwaasi/nvim ~/.config/nvim
 nvim
 ```
 
-On first launch lazy.nvim installs every plugin at the versions pinned in `lazy-lock.json`, and Mason installs the language servers and tools. When that finishes:
+On first launch lazy.nvim installs every plugin at the versions pinned in `lazy-lock.json`, Mason installs the language servers and tools, and copilot.lua downloads the Copilot language server (around 100 MB, so give it a few minutes). When that finishes:
 
 1. Run `:Copilot auth` to sign in to GitHub Copilot.
 2. Run `:checkhealth` to see anything still missing.
@@ -41,13 +41,13 @@ On first launch lazy.nvim installs every plugin at the versions pinned in `lazy-
 
 ```
 init.lua                  entry point
+lazyvim.json              enabled LazyVim extras (Copilot and the extensions below)
 lua/config/lazy.lua       bootstraps and sets up lazy.nvim
 lua/config/options.lua    editor options
 lua/config/keymaps.lua    extra keymaps
 lua/config/autocmds.lua   extra autocommands
 lua/plugins/lsp.lua       LSP servers, diagnostics, Mason tools
 lua/plugins/completion.lua  blink.cmp + lsp_signature
-lua/plugins/copilot.lua   copilot.vim + CopilotChat
 lua/plugins/ui.lua        Catppuccin, lualine, noice, which-key, bufferline
 ```
 
@@ -75,28 +75,34 @@ Documentation for the selected item shows automatically, and function signatures
 
 ### Copilot
 
-Suggestions are on for every filetype. `<Tab>` is left to the completion menu.
+Uses LazyVim's `ai.copilot` and `ai.copilot-chat` extras. Copilot suggestions show up in the completion menu next to LSP results, so you accept them with `<CR>` like any other item.
 
-| Key (insert mode) | Action |
-| --- | --- |
-| `<C-j>` | Accept suggestion |
-| `<C-l>` | Accept next word |
-| `<C-k>` / `<C-n>` | Previous / next suggestion |
-
-CopilotChat:
+CopilotChat lives under `<leader>a`:
 
 | Key | Action |
 | --- | --- |
-| `<leader>cc` | Open chat |
-| `<leader>ce` | Explain code |
-| `<leader>cr` | Review code |
-| `<leader>cf` | Fix code |
-| `<leader>co` | Optimize code |
-| `<leader>cd` | Add documentation |
-| `<leader>ct` | Generate tests |
-| `<leader>cfd` | Fix diagnostics |
-| `<leader>ccm` | Commit message for all changes |
-| `<leader>ccs` | Commit message for staged changes |
+| `<leader>aa` | Toggle chat (works on a visual selection too) |
+| `<leader>aq` | Quick one-off question |
+| `<leader>ap` | Prompt picker: Explain, Review, Fix, Optimize, Docs, Tests, Commit |
+| `<leader>ax` | Clear chat |
+| `<C-s>` | Send the prompt (inside the chat window) |
+
+If you'd rather see suggestions as inline ghost text, add `vim.g.ai_cmp = false` to `lua/config/options.lua`.
+
+### Extensions
+
+Extra plugins enabled from LazyVim's extras. Toggle any of them from `:LazyExtras`.
+
+| Extension | What it does | Keys |
+| --- | --- | --- |
+| mini.surround | Add, change and delete surrounding quotes, brackets and tags | `gsa` add, `gsd` delete, `gsr` replace |
+| yanky.nvim | Yank history and smarter pasting | `<leader>p` history, `[y` / `]y` cycle after a paste |
+| dial.nvim | Increment and decrement numbers, booleans, dates, `&&`/`\|\|` and more | `<C-a>` / `<C-x>` |
+| inc-rename.nvim | LSP rename with a live preview of every change | `<leader>cr` |
+| mini.files | Browse and edit the file tree as a buffer | `<leader>fm` (current file), `<leader>fM` (cwd) |
+| smear-cursor.nvim | Animated cursor trail when the cursor jumps | |
+| nvim-treesitter-context | Pins the current function or class header to the top of the window | `<leader>ut` toggle |
+| mini.hipatterns | Colours hex codes and Tailwind classes inline | |
 
 ### UI
 
